@@ -1,0 +1,55 @@
+version: '3.2'
+services:
+  europe-market:
+    image: banitsa/market
+    environment:
+      SPRING_APPLICATION_JSON: '{ "market.spec.origin": "Europe" }'
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+  america-market:
+    image: banitsa/market
+    environment:
+      SPRING_APPLICATION_JSON: '{ "market.spec.origin": "America" }'
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+  asia-market:
+    image: banitsa/market
+    environment:
+      SPRING_APPLICATION_JSON: '{ "market.spec.origin": "Asia" }'
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+
+  aurora:
+    image: banitsa/aurora
+    depends_on:
+      - europe-market
+      - america-market
+      - asia-market
+    environment:
+      SPRING_APPLICATION_JSON: '{ "grpc.channel.host": "europe-market", "grpc.channel.port": "8080" }'
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+
+  orderbook:
+    image: banitsa/orderbook
+    depends_on:
+      - aurora
+    ports:
+      - target: 8080
+        published: 80
+        mode: host
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+
+  calculator:
+    image: banitsa/calculator
+    depends_on:
+      - aurora
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
