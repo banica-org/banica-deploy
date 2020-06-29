@@ -24,10 +24,6 @@ services:
 
   aurora:
     image: banitsa/aurora
-    depends_on:
-      - europe-market
-      - america-market
-      - asia-market
     environment:
       SPRING_APPLICATION_JSON: '{ "grpc.channel.host": "europe-market", "grpc.channel.port": "8080" }'
     deploy:
@@ -36,20 +32,26 @@ services:
 
   orderbook:
     image: banitsa/orderbook
-    depends_on:
-      - aurora
-    ports:
-      - target: 8080
-        published: 80
-        mode: host
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
 
   calculator:
     image: banitsa/calculator
-    depends_on:
-      - aurora
+    ports:
+      - 80:8080
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
+
+  dozzle:
+    image: amir20/dozzle:v2.0.2
+    volumes:
+      - type: "bind"
+        source: "/var/run/docker.sock"
+        target: "/var/run/docker.sock"
+    ports:
+      - 9999:8080
+    deploy:
+      placement:
+        constraints: [node.role == manager]
