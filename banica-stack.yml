@@ -3,21 +3,21 @@ services:
   europe-market:
     image: banitsa/market
     environment:
-      SPRING_APPLICATION_JSON: '{ "market.spec.origin": "Europe" }'
+      SPRING_APPLICATION_JSON: '{ "spring.profiles.active": "Europe" }'
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
   america-market:
     image: banitsa/market
     environment:
-      SPRING_APPLICATION_JSON: '{ "market.spec.origin": "America" }'
+      SPRING_APPLICATION_JSON: '{ "spring.profiles.active": "America" }'
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
   asia-market:
     image: banitsa/market
     environment:
-      SPRING_APPLICATION_JSON: '{ "market.spec.origin": "Asia" }'
+      SPRING_APPLICATION_JSON: '{ "spring.profiles.active": "Asia" }'
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
@@ -25,7 +25,7 @@ services:
   aurora:
     image: banitsa/aurora
     environment:
-      SPRING_APPLICATION_JSON: '{ "grpc.channel.host": "europe-market", "grpc.channel.port": "8080" }'
+      SPRING_APPLICATION_JSON: '{ "grpc.channel.host": "europe-market", "grpc.channel.port": "8082" }'
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
@@ -45,7 +45,7 @@ services:
         constraints: [node.labels.purpose == general-purpose]
 
   dozzle:
-    image: amir20/dozzle:v2.0.2
+    image: amir20/dozzle:v2.1.1
     volumes:
       - type: "bind"
         source: "/var/run/docker.sock"
