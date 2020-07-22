@@ -1,23 +1,61 @@
-version: '3.2'
+version: '3.8'
 services:
-  europe-market:
-    image: banitsa/market
-    environment:
-      SPRING_APPLICATION_JSON: '{ "spring.profiles.active": "Europe" }'
-    deploy:
-      placement:
-        constraints: [node.labels.purpose == general-purpose]
+
   america-market:
     image: banitsa/market
+    ports:
+      - 7091:7091
     environment:
-      SPRING_APPLICATION_JSON: '{ "spring.profiles.active": "America" }'
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.jmxremote=true
+                          -Dcom.sun.management.jmxremote.port=7091
+                          -Dcom.sun.management.jmxremote.rmi.port=7091
+                          -Dcom.sun.management.jmxremote.authenticate=false
+                          -Dcom.sun.management.jmxremote.ssl=false
+                          -Djava.rmi.server.hostname=ecsc00a08208
+                          -Dspring.profiles.active=America'
+    volumes:
+      - type: "bind"
+        source: "banica-volume/market-goods"
+        target: "/workspace/market-goods"
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
+
   asia-market:
     image: banitsa/market
+    ports:
+      - 7092:7092
     environment:
-      SPRING_APPLICATION_JSON: '{ "spring.profiles.active": "Asia" }'
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.jmxremote=true
+                          -Dcom.sun.management.jmxremote.port=7092
+                          -Dcom.sun.management.jmxremote.rmi.port=7092
+                          -Dcom.sun.management.jmxremote.authenticate=false
+                          -Dcom.sun.management.jmxremote.ssl=false
+                          -Djava.rmi.server.hostname=ecsc00a08208
+                          -Dspring.profiles.active=Asia'
+    volumes:
+      - type: "bind"
+        source: "banica-volume/market-goods"
+        target: "/workspace/market-goods"
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+  europe-market:
+    image: banitsa/market
+    ports:
+      - 7093:7093
+    environment:
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.jmxremote=true
+                          -Dcom.sun.management.jmxremote.port=7093
+                          -Dcom.sun.management.jmxremote.rmi.port=7093
+                          -Dcom.sun.management.jmxremote.authenticate=false
+                          -Dcom.sun.management.jmxremote.ssl=false
+                          -Djava.rmi.server.hostname=ecsc00a08208
+                          -Dspring.profiles.active=Europe'
+    volumes:
+      - type: "bind"
+        source: "banica-volume/market-goods"
+        target: "/workspace/market-goods"
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
