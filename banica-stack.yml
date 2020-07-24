@@ -6,17 +6,15 @@ services:
     ports:
       - 7091:7091
     environment:
-      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.jmxremote=true
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7091
                           -Dcom.sun.management.jmxremote.rmi.port=7091
-                          -Dcom.sun.management.jmxremote.authenticate=false
-                          -Dcom.sun.management.jmxremote.ssl=false
                           -Djava.rmi.server.hostname=ecsc00a08208
                           -Dspring.profiles.active=America'
     volumes:
       - type: "bind"
-        source: "banica-volume/market-goods"
-        target: "/workspace/market-goods"
+        source: "data"
+        target: "/workspace/data"
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
@@ -26,17 +24,15 @@ services:
     ports:
       - 7092:7092
     environment:
-      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.jmxremote=true
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7092
                           -Dcom.sun.management.jmxremote.rmi.port=7092
-                          -Dcom.sun.management.jmxremote.authenticate=false
-                          -Dcom.sun.management.jmxremote.ssl=false
                           -Djava.rmi.server.hostname=ecsc00a08208
                           -Dspring.profiles.active=Asia'
     volumes:
       - type: "bind"
-        source: "banica-volume/market-goods"
-        target: "/workspace/market-goods"
+        source: "data"
+        target: "/workspace/data"
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
@@ -45,17 +41,15 @@ services:
     ports:
       - 7093:7093
     environment:
-      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.jmxremote=true
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7093
                           -Dcom.sun.management.jmxremote.rmi.port=7093
-                          -Dcom.sun.management.jmxremote.authenticate=false
-                          -Dcom.sun.management.jmxremote.ssl=false
                           -Djava.rmi.server.hostname=ecsc00a08208
                           -Dspring.profiles.active=Europe'
     volumes:
       - type: "bind"
-        source: "banica-volume/market-goods"
-        target: "/workspace/market-goods"
+        source: "data"
+        target: "/workspace/data"
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
@@ -90,6 +84,19 @@ services:
         target: "/var/run/docker.sock"
     ports:
       - 9999:8080
+    deploy:
+      placement:
+        constraints: [node.role == manager]
+
+  web:
+    image: nginx:1.19
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - type: "bind"
+        source: "data"
+        target: "/usr/share/nginx/html"
+    ports:
+      - 9000:80
     deploy:
       placement:
         constraints: [node.role == manager]
