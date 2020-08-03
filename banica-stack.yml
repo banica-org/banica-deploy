@@ -4,8 +4,8 @@ services:
   america-market:
     image: banitsa/market
     ports:
-      - 7091:7091
-      - 8080:8080
+      - 7091:7091 # for jmx
+      - 8081:8081 # for grpc
     environment:
       JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7091
@@ -23,8 +23,8 @@ services:
   asia-market:
     image: banitsa/market
     ports:
-      - 7092:7092
-      - 8081:8081
+      - 7092:7092 # for jmx
+      - 8082:8082 # for grpc
     environment:
       JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7092
@@ -42,8 +42,8 @@ services:
   europe-market:
     image: banitsa/market
     ports:
-      - 7093:7093
-      - 8082:8082
+      - 7093:7093 # for jmx
+      - 8083:8083 # for grpc
     environment:
       JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7093
@@ -58,14 +58,24 @@ services:
       placement:
         constraints: [node.labels.purpose == general-purpose]
 
-#  aurora:
-#    image: banitsa/aurora
-#    environment:
-#      SPRING_APPLICATION_JSON: '{ "grpc.channel.host": "europe-market", "grpc.channel.port": "8082" }'
-#    deploy:
-#      placement:
-#        constraints: [node.labels.purpose == general-purpose]
-#
+  aurora:
+    image: banitsa/aurora
+    ports:
+      - 7094:7094 # for jmx
+      - 8084:8084 # for grpc
+    environment:
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
+                          -Dcom.sun.management.jmxremote.port=7094
+                          -Dcom.sun.management.jmxremote.rmi.port=7094
+                          -Djava.rmi.server.hostname=ecsc00a08208'
+    volumes:
+      - type: "bind"
+        source: "data"
+        target: "/workspace/data"
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+
 #  orderbook:
 #    image: banitsa/orderbook
 #    deploy:
