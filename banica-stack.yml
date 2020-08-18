@@ -76,11 +76,23 @@ services:
       placement:
         constraints: [node.labels.purpose == general-purpose]
 
-#  orderbook:
-#    image: banitsa/orderbook
-#    deploy:
-#      placement:
-#        constraints: [node.labels.purpose == general-purpose]
+  orderbook:
+    image: banitsa/orderbook
+    ports:
+      - 7095:7095 # for jmx
+      - 8085:8085 # for grpc
+    environment:
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
+                          -Dcom.sun.management.jmxremote.port=7095
+                          -Dcom.sun.management.jmxremote.rmi.port=7095
+                          -Djava.rmi.server.hostname=ecsc00a08208'
+    volumes:
+      - type: "bind"
+        source: "data"
+        target: "/workspace/data"
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
 
   calculator:
     image: banitsa/calculator
