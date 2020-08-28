@@ -67,7 +67,8 @@ services:
       JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7094
                           -Dcom.sun.management.jmxremote.rmi.port=7094
-                          -Djava.rmi.server.hostname=ecsc00a08208'
+                          -Djava.rmi.server.hostname=ecsc00a08208
+                          -Dorderbook.grpc.server.host=orderbook'
     volumes:
       - type: "bind"
         source: "data"
@@ -98,7 +99,7 @@ services:
     image: banitsa/calculator
     ports:
       - 7096:7096 # for jmx
-      - 80:8080
+      - 80:8080   # for http
     environment:
       JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7096
