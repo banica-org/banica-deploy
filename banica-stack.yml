@@ -97,7 +97,17 @@ services:
   calculator:
     image: banitsa/calculator
     ports:
+      - 7096:7096 # for jmx
       - 80:8080
+    environment:
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
+                          -Dcom.sun.management.jmxremote.port=7096
+                          -Dcom.sun.management.jmxremote.rmi.port=7096
+                          -Djava.rmi.server.hostname=ecsc00a08208'
+    volumes:
+      - type: "bind"
+        source: "data"
+        target: "/workspace/data"
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
