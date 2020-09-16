@@ -113,6 +113,23 @@ services:
       placement:
         constraints: [node.labels.purpose == general-purpose]
 
+  persist:
+    image: banitsa/persist
+    ports:
+      - 7097:7097 # for jmx
+    environment:
+      JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
+                          -Dcom.sun.management.jmxremote.port=7097
+                          -Dcom.sun.management.jmxremote.rmi.port=7097
+                          -Djava.rmi.server.hostname=ecsc00a08208'
+    volumes:
+      - type: "bind"
+        source: "data"
+        target: "/workspace/data"
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+
   dozzle:
     image: amir20/dozzle:v2.1.1
     volumes:
