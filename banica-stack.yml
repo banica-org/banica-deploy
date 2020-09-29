@@ -121,7 +121,8 @@ services:
       JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7097
                           -Dcom.sun.management.jmxremote.rmi.port=7097
-                          -Djava.rmi.server.hostname=ecsc00a08208'
+                          -Djava.rmi.server.hostname=ecsc00a08208
+                          -Dspring.datasource.url=jdbc:postgresql://10.6.17.88:5432/banica'
     volumes:
       - type: "bind"
         source: "data"
