@@ -99,7 +99,7 @@ services:
     image: banitsa/calculator
     ports:
       - 7096:7096 # for jmx
-      - 80:8080   # for http
+      - 8080:8080   # for http
     environment:
       JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
                           -Dcom.sun.management.jmxremote.port=7096
@@ -109,6 +109,27 @@ services:
       - type: "bind"
         source: "data"
         target: "/workspace/data"
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+
+  webapp:
+    image: banitsa/webapp
+    ports:
+      - 80:80
+    environment:
+      - "CALCULATOR_SERVICE_URL=http://ecsc00a08208:9090"
+    deploy:
+      placement:
+        constraints: [node.labels.purpose == general-purpose]
+
+  envoy-proxy:
+    build:
+      context: .
+      dockerfile: envoy.Dockerfile
+    posts:
+      - 9090:9090
+      - 9091:9091
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
