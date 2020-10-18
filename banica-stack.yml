@@ -99,6 +99,7 @@ services:
     image: banitsa/calculator
     ports:
       - 7096:7096 # for jmx
+      - 8086:8086 # for grpc
       - 8080:8080   # for http
     environment:
       JAVA_TOOL_OPTIONS: '-Dcom.sun.management.config.file=data/management.properties
