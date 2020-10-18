@@ -124,12 +124,10 @@ services:
         constraints: [node.labels.purpose == general-purpose]
 
   envoy-proxy:
-    build:
-      context: .
-      dockerfile: envoy.Dockerfile
-    posts:
+    image: banitsa/envoy-proxy:latest
+    ports:
       - 9090:9090
-      - 9091:9091
+      - 9901:9901
     deploy:
       placement:
         constraints: [node.labels.purpose == general-purpose]
